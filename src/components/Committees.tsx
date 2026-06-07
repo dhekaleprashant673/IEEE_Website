@@ -16,6 +16,23 @@ interface TechnicalMember {
   affiliation: string;
 }
 
+const organizingChairs: { index: number; name: string; designation: string }[] = [
+  { index: 1,  name: 'Dr. Kailash. J. Karande',      designation: 'Principal, SKNSCOE and Director, Sinhgad Institutes, Pandharpur' },
+  { index: 2,  name: 'Dr. S. G. Kulkarni',            designation: 'Vice Principal, SKNSCOE and Director, Sinhgad Institutes, Pandharpur' },
+  { index: 3,  name: 'Dr. Kondooru Shivashanker',     designation: 'H.O.D, Electrical' },
+  { index: 4,  name: 'Dr. A. O. Mulani',              designation: 'H.O.D, ENTC' },
+  { index: 5,  name: 'Dr. S. S. Kulkarni',            designation: 'Dean (Academic), H.O.D. (MECH)' },
+  { index: 6,  name: 'Dr. S. V. Pingale',             designation: 'H.O.D, CSE' },
+  { index: 7,  name: 'Prof. N. M. Sawant',            designation: 'H.O.D, AIDS' },
+  { index: 8,  name: 'Dr. S. G. Deshmukh',            designation: 'Dean (Publication)' },
+  { index: 9,  name: 'Dr. C. P. Pise',               designation: 'Dean (Admin)' },
+  { index: 10, name: 'Dr. B. B. Godbole',            designation: 'Dean (Research)' },
+  { index: 11, name: 'Dr. B. S. Gandhare',           designation: 'Dean (PG) and EDP' },
+  { index: 12, name: 'Dr. S. D. Katekar',            designation: 'Dean (Training and Placement)' },
+  { index: 13, name: 'Dr. A. I. Nikam',              designation: 'Dean (Student Affair), H.O.D. (GSE)' },
+  { index: 14, name: 'Dr. Y. P. Pawar',              designation: 'H.O.D, Civil' },
+];
+
 const organizingCommittee: CommitteeMember[] = [
   { index: 1, name: 'Dr. Kailash. J. Karande', designation: 'Principal, SKNSCOE and Director, Sinhgad Institutes, Pandharpur', role: 'General Chair' },
   { index: 2, name: 'Dr. R. S. Mente', designation: 'Director, Computer Science and Applications, P A H Solapur University, Solapur', role: 'Conference Convener' },
@@ -94,8 +111,53 @@ const advisoryCommittee: TechnicalMember[] = [
   { index: 14, name: 'Dr. Tarandeep Kaur Bhatia', affiliation: 'Amity University, Mohali, India' },
 ];
 
+const conferenceChairs: { index: number; name: string; designation: string }[] = [
+  { index: 1, name: 'Dr. A. O. Mulani',    designation: 'H.O.D, ENTC' },
+  { index: 2, name: 'Dr. S. G. Kulkarni',  designation: 'Vice-Principal, SKNSCOE and Director, Sinhgad Institutes, Pandharpur' },
+];
+
+const publicationChairs: { index: number; name: string; designation: string }[] = [
+  { index: 1, name: 'Prof. N. M. Sawant',         designation: 'H.O.D, AIDS' },
+  { index: 2, name: 'Dr. Kondooru Shivashanker',  designation: 'H.O.D, Electrical' },
+  { index: 3, name: 'Dr. S. S. Kulkarni',         designation: 'Dean (Academic), H.O.D. (MECH)' },
+  { index: 4, name: 'Dr. Shirgan',                designation: '—' },
+];
+
+const internationalRelationChairs: { index: number; name: string; designation: string }[] = [
+  { index: 1, name: 'Dr. S. G. Deshmukh', designation: 'Dean (Publication)' },
+];
+
+const technicalChairs: { index: number; name: string; designation: string }[] = [
+  { index: 1, name: 'Dr. S. V. Pingale',    designation: 'H.O.D, CSE' },
+  { index: 2, name: 'Dr. Y. P. Pawar',      designation: 'H.O.D, Civil' },
+  { index: 3, name: 'Dr. Vijay Biradar',    designation: '—' },
+  { index: 4, name: 'Mr. D. M. Korake',     designation: '—' },
+  { index: 5, name: 'Mr. P. B. Vyavahare',  designation: '—' },
+  { index: 6, name: 'Mrs. A. A. Chandane',  designation: '—' },
+  { index: 7, name: 'Mr. A. N. Godase',     designation: '—' },
+];
+
+const registrationChairs: { index: number; name: string; designation: string }[] = [
+  { index: 1, name: 'Dr. Vinayak G. M. Jagtap', designation: '—' },
+  { index: 2, name: 'Mr. V. P. More',            designation: '—' },
+  { index: 3, name: 'Mr. K. P. Jadhav',          designation: '—' },
+];
+
+const hospitalityChairs: { index: number; name: string; designation: string }[] = [
+  { index: 1, name: 'Dr. A. C. Pise',       designation: '—' },
+  { index: 2, name: 'Mr. N. V. Khandekar',  designation: '—' },
+  { index: 3, name: 'Mr. A. N. Godase',     designation: '—' },
+];
+
+const programmeCommittee: { index: number; name: string; designation: string }[] = [
+  { index: 1, name: 'Mrs. S. D. Ghodake',  designation: '—' },
+  { index: 2, name: 'Mr. K. P. Jadhav',    designation: '—' },
+  { index: 3, name: 'Mr. N. V. Khandekar', designation: '—' },
+  { index: 4, name: 'Mr. M. R. Khadatare', designation: '—' },
+];
+
 export default function Committees() {
-  const [activeTab, setActiveTab] = useState<'organizing' | 'technical' | 'advisory'>('organizing');
+  const [activeTab, setActiveTab] = useState<'chairs' | 'organizing' | 'conf-chairs' | 'pub-chairs' | 'tech-chairs' | 'reg-chairs' | 'hosp-chairs' | 'prog-comm' | 'intl-chairs' | 'technical' | 'advisory'>('chairs');
 
   return (
     <section id="committees" className="py-24 bg-white text-gray-900 overflow-hidden border-t border-gray-100">
@@ -122,18 +184,26 @@ export default function Committees() {
         </div>
 
         {/* Tab Selectors */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
           {[
-            { id: 'organizing', label: 'Organizing Committee' },
-            { id: 'technical', label: 'Technical Committee' },
-            { id: 'advisory', label: 'Advisory Committee' },
+            { id: 'chairs',       label: 'Organizing Chairs' },
+            { id: 'organizing',   label: 'Organizing Committee' },
+            { id: 'conf-chairs',  label: 'Conference Chairs' },
+            { id: 'pub-chairs',   label: 'Publication Chairs' },
+            { id: 'intl-chairs',  label: 'Intl. Relation Chairs' },
+            { id: 'tech-chairs',  label: 'Technical Chairs' },
+            { id: 'reg-chairs',   label: 'Registration Chairs' },
+            { id: 'hosp-chairs',  label: 'Hospitality Chairs' },
+            { id: 'prog-comm',    label: 'Programme Committee' },
+            { id: 'technical',    label: 'Technical Committee' },
+            { id: 'advisory',     label: 'Advisory Committee' },
           ].map((tab) => {
             const isSelected = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as 'organizing' | 'technical' | 'advisory')}
-                className={`w-full sm:w-auto px-8 py-3.5 text-xs font-mono font-bold tracking-widest uppercase rounded-md border transition-all duration-300 cursor-pointer ${
+                onClick={() => setActiveTab(tab.id as typeof activeTab)}
+                className={`px-5 py-2.5 text-xs font-mono font-bold tracking-widest uppercase rounded-md border transition-all duration-300 cursor-pointer ${
                   isSelected
                     ? 'bg-[#0250c5] text-white border-[#0250c5] shadow-md'
                     : 'bg-white text-[#0250c5] border-[#0250c5] hover:bg-[#0250c5]/5'
@@ -154,7 +224,32 @@ export default function Committees() {
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="overflow-x-auto">
-            {activeTab === 'organizing' ? (
+            {activeTab === 'chairs' ? (
+              /* Organizing Chairs Table — 3 columns: #, Name, Designation */
+              <table className="w-full border-collapse text-left text-sm md:text-base">
+                <thead>
+                  <tr className="bg-[#2a303b] text-white font-semibold uppercase text-xs md:text-sm tracking-wider">
+                    <th className="py-4 px-6 w-16 text-center">#</th>
+                    <th className="py-4 px-6">Name</th>
+                    <th className="py-4 px-6">Designation</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {organizingChairs.map((member) => (
+                    <tr
+                      key={member.index}
+                      className={`transition-colors hover:bg-gray-50 ${
+                        member.index % 2 === 0 ? 'bg-[#f8fafc]' : 'bg-white'
+                      }`}
+                    >
+                      <td className="py-4 px-6 text-center font-bold text-gray-500">{member.index}</td>
+                      <td className="py-4 px-6 font-bold text-gray-800">{member.name}</td>
+                      <td className="py-4 px-6 font-light text-gray-600 leading-relaxed">{member.designation}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : activeTab === 'organizing' ? (
               /* Organizing Committee Table — 4 columns: #, Name, Designation, Role */
               <table className="w-full border-collapse text-left text-sm md:text-base">
                 <thead>
@@ -167,7 +262,7 @@ export default function Committees() {
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {organizingCommittee.map((member) => (
-                    <tr 
+                    <tr
                       key={member.index}
                       className={`transition-colors hover:bg-gray-50 ${
                         member.index % 2 === 0 ? 'bg-[#f8fafc]' : 'bg-white'
@@ -181,7 +276,7 @@ export default function Committees() {
                   ))}
                 </tbody>
               </table>
-            ) : (
+            ) : activeTab === 'technical' || activeTab === 'advisory' ? (
               /* Technical & Advisory Committee Table — 3 columns: Sr. No, Name, Affiliation */
               <table className="w-full border-collapse text-left text-sm md:text-base">
                 <thead>
@@ -206,6 +301,45 @@ export default function Committees() {
                   ))}
                 </tbody>
               </table>
+            ) : (
+              /* All other sub-committee tables — 3 columns: #, Name, Designation */
+              (() => {
+                const dataMap: Record<string, { index: number; name: string; designation: string }[]> = {
+                  'conf-chairs': conferenceChairs,
+                  'pub-chairs': publicationChairs,
+                  'intl-chairs': internationalRelationChairs,
+                  'tech-chairs': technicalChairs,
+                  'reg-chairs': registrationChairs,
+                  'hosp-chairs': hospitalityChairs,
+                  'prog-comm': programmeCommittee,
+                };
+                const data = dataMap[activeTab] ?? [];
+                return (
+                  <table className="w-full border-collapse text-left text-sm md:text-base">
+                    <thead>
+                      <tr className="bg-[#2a303b] text-white font-semibold uppercase text-xs md:text-sm tracking-wider">
+                        <th className="py-4 px-6 w-16 text-center">#</th>
+                        <th className="py-4 px-6">Name</th>
+                        <th className="py-4 px-6">Designation</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {data.map((member) => (
+                        <tr
+                          key={member.index}
+                          className={`transition-colors hover:bg-gray-50 ${
+                            member.index % 2 === 0 ? 'bg-[#f8fafc]' : 'bg-white'
+                          }`}
+                        >
+                          <td className="py-4 px-6 text-center font-bold text-gray-500">{member.index}</td>
+                          <td className="py-4 px-6 font-bold text-gray-800">{member.name}</td>
+                          <td className="py-4 px-6 font-light text-gray-600 leading-relaxed">{member.designation}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                );
+              })()
             )}
           </div>
         </motion.div>

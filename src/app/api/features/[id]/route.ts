@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/firebase';
 import { verifyAuth } from '@/lib/auth';
+
+const serializeDoc = (doc: FirebaseFirestore.DocumentSnapshot) => {
+  const data = doc.data()!;
+  return {
+    id: doc.id,
+    ...data,
+    createdAt: data.createdAt?.toDate?.() || data.createdAt,
+  };
+};
 
 export async function PUT(
   request: NextRequest,
@@ -19,12 +28,11 @@ export async function PUT(
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const updated = await prisma.feature.update({
-      where: { id },
-      data: { title, description, icon },
-    });
+    const docRef = db.collection('features').doc(id);
+    await docRef.update({ title, description, icon });
 
-    return NextResponse.json(updated);
+    const updatedDoc = await docRef.get();
+    return NextResponse.json(serializeDoc(updatedDoc));
   } catch (error) {
     console.error('Update feature error:', error);
     return NextResponse.json({ error: 'Failed to update feature' }, { status: 500 });
@@ -43,9 +51,7 @@ export async function DELETE(
 
     const { id } = await params;
 
-    await prisma.feature.delete({
-      where: { id },
-    });
+    await db.collection('features').doc(id).delete();
 
     return NextResponse.json({ success: true });
   } catch (error) {

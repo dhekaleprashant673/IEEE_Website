@@ -38,12 +38,6 @@ const chiefPatrons: PatronData[] = [
 
 const patrons: PatronData[] = [
   {
-    name: 'Dr. Laxmikant Dama',
-    designation: 'Pro-Vice Chancellor',
-    organization: 'Punyashlok Ahilyadevi Holkar Solapur University, Solapur',
-    image: '/dama.png',
-  },
-  {
     name: 'Dr. Kailash J. Karande',
     designation: 'Principal, SKNSCOE',
     organization: 'Campus Director, Sinhgad Institute, Pandharpur',
@@ -149,7 +143,7 @@ export default function Patrons() {
 
         {/* Patrons Grid */}
         <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 gap-10 max-w-3xl mx-auto"
+          className="flex justify-center"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"

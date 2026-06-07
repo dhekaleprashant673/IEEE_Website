@@ -13,30 +13,22 @@ const scheduleData: ScheduleRow[] = [
   {
     index: 1,
     particulars: 'Full Paper Submission',
-    originalDate: 'October 30, 2025',
-    extendedDate: 'November 15, 2025',
+    extendedDate: '1st March 2027',
   },
   {
     index: 2,
     particulars: 'Notification of Acceptance',
-    originalDate: 'October 30, 2025',
-    extendedDate: 'November 22, 2025',
+    extendedDate: '15th March 2027',
   },
   {
     index: 3,
-    particulars: 'Final/Revised Paper Submission',
-    originalDate: 'November 21, 2025',
-    extendedDate: 'November 28, 2025',
+    particulars: 'Camera Ready Paper Submission with Registration',
+    extendedDate: 'From 1st April 2027',
   },
   {
     index: 4,
-    particulars: 'Last Date of Regular Registration',
-    extendedDate: 'November 28, 2025',
-  },
-  {
-    index: 5,
     particulars: 'Conference Dates',
-    extendedDate: 'December 12 & 13, 2025',
+    extendedDate: '11–12 June 2027',
   },
 ];
 

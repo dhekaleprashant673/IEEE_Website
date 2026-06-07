@@ -15,7 +15,7 @@ export default function Hero() {
 
   // Calculate countdown to the conference date: December 12, 2025 (matching 00s in screenshot)
   useEffect(() => {
-    const targetDate = new Date('2025-12-12T09:00:00+05:30').getTime();
+    const targetDate = new Date('2027-06-10T09:00:00+05:30').getTime();
 
     const updateTimer = () => {
       const now = new Date().getTime();
@@ -42,6 +42,7 @@ export default function Hero() {
     <section 
       id="home" 
       className="relative min-h-screen w-full flex items-center justify-center bg-[#1d1b7b] overflow-hidden pt-28 pb-20"
+      style={{ borderRadius: '0 0 3rem 3rem' }}
     >
       {/* Background Campus Image */}
       <div 
@@ -51,9 +52,8 @@ export default function Hero() {
         }}
       />
 
-      {/* Purple-Blue Overlay */}
-      <div className="absolute inset-0 bg-[#363595]/85 mix-blend-multiply z-1 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#1d1b7b]/70 via-[#1d1b7b]/50 to-[#1d1b7b]/80 z-2 pointer-events-none" />
+      {/* Single semi-transparent blue overlay — lets building show through */}
+      <div className="absolute inset-0 z-1 pointer-events-none" style={{ background: 'rgba(40, 35, 160, 0.55)' }} />
 
       {/* Content Container */}
       <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center mt-12">
@@ -100,7 +100,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          12<sup>TH</sup> & 13<sup>TH</sup> DECEMBER 2025
+          10<sup>TH</sup> &amp; 11<sup>TH</sup> JUNE 2027
         </motion.h3>
 
         {/* Main Title Heading */}
@@ -110,7 +110,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          International Conference on Intelligent Computing and Vision Technologies (ICICVT)
+          1st International Conference on Innovations in Engineering Technologies and Sciences for Sustainable Development (ICIETSS-2027)
         </motion.h1>
 
         {/* In Association Tag */}
@@ -130,9 +130,8 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          Last Date of Paper submission is{' '}
-          <span className="line-through text-white/70 mr-1.5">October 30, 2025</span>
-          <span>November 15, 2025</span>
+          Full Paper Submission Deadline:{' '}
+          <span>1st March 2027</span>
         </motion.p>
 
         {/* Action Buttons */}
@@ -149,7 +148,9 @@ export default function Hero() {
             Register Now
           </a>
           <a
-            href="#about"
+            href="https://www.sknscoe.ac.in/About-us.php"
+            target="_blank"
+            rel="noopener noreferrer"
             className="px-8 py-3 rounded-full text-xs md:text-sm font-bold text-[#0250c5] bg-white hover:bg-gray-100 transition-all duration-300 shadow-md cursor-pointer select-none"
           >
             About Institute

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/firebase';
 import { verifyAuth } from '@/lib/auth';
 
 export async function PUT(
@@ -19,12 +19,18 @@ export async function PUT(
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const updated = await prisma.teamMember.update({
-      where: { id },
-      data: { name, designation, image, linkedin, github },
-    });
+    const docRef = db.collection('team_members').doc(id);
+    const updateData = { name, designation, image, linkedin, github };
+    await docRef.update(updateData);
 
-    return NextResponse.json(updated);
+    const updatedDoc = await docRef.get();
+    const data = updatedDoc.data();
+
+    return NextResponse.json({
+      id: updatedDoc.id,
+      ...data,
+      createdAt: data?.createdAt?.toDate?.() || data?.createdAt,
+    });
   } catch (error) {
     console.error('Update team member error:', error);
     return NextResponse.json({ error: 'Failed to update team member' }, { status: 500 });
@@ -43,9 +49,7 @@ export async function DELETE(
 
     const { id } = await params;
 
-    await prisma.teamMember.delete({
-      where: { id },
-    });
+    await db.collection('team_members').doc(id).delete();
 
     return NextResponse.json({ success: true });
   } catch (error) {

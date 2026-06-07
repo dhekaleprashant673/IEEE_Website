@@ -1,45 +1,66 @@
-const { PrismaClient } = require('@prisma/client');
-const { PrismaPg } = require('@prisma/adapter-pg');
-const { Pool } = require('pg');
+const { initializeApp, cert } = require('firebase-admin/app');
+const { getFirestore } = require('firebase-admin/firestore');
 const bcrypt = require('bcrypt');
+const path = require('path');
+const fs = require('fs');
 require('dotenv').config();
 
 async function main() {
-  const connectionString = process.env.DATABASE_URL;
-  if (!connectionString) {
-    console.error('DATABASE_URL is not set in environment variables');
-    process.exit(1);
+  // Initialize Firebase Admin
+  const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
+  let app;
+
+  if (serviceAccountPath) {
+    const resolvedPath = path.resolve(serviceAccountPath);
+    if (fs.existsSync(resolvedPath)) {
+      const serviceAccount = JSON.parse(fs.readFileSync(resolvedPath, 'utf8'));
+      app = initializeApp({ credential: cert(serviceAccount) });
+    } else {
+      console.error(`Service account file not found at: ${resolvedPath}`);
+      process.exit(1);
+    }
+  } else {
+    const projectId = process.env.FIREBASE_PROJECT_ID;
+    if (!projectId) {
+      console.error('Set FIREBASE_SERVICE_ACCOUNT_PATH or FIREBASE_PROJECT_ID in .env');
+      process.exit(1);
+    }
+    app = initializeApp({ projectId });
   }
 
-  const pool = new Pool({ connectionString });
-  const adapter = new PrismaPg(pool);
-  const prisma = new PrismaClient({ adapter });
+  const db = getFirestore(app);
 
-  console.log('Seeding database...');
+  console.log('Seeding Firestore database...');
 
   try {
-    // 1. Clear existing data to avoid constraint/duplicate violations
-    await prisma.user.deleteMany({});
-    await prisma.feature.deleteMany({});
-    await prisma.statistic.deleteMany({});
-    await prisma.teamMember.deleteMany({});
-    await prisma.galleryImage.deleteMany({});
-    await prisma.contact.deleteMany({});
-    await prisma.newsletterSubscriber.deleteMany({});
+    // 1. Clear existing data
+    const collections = [
+      'users', 'features', 'statistics',
+      'team_members', 'gallery_images',
+      'contacts', 'newsletter_subscribers',
+    ];
 
-    console.log('Cleared existing tables.');
+    for (const col of collections) {
+      const snapshot = await db.collection(col).get();
+      if (!snapshot.empty) {
+        const batch = db.batch();
+        snapshot.docs.forEach((doc) => batch.delete(doc.ref));
+        await batch.commit();
+        console.log(`  Cleared ${snapshot.size} docs from '${col}'`);
+      }
+    }
+    console.log('Cleared existing collections.');
 
-    // 2. Hash admin password
+    // 2. Create admin user
     const hashedPassword = await bcrypt.hash('admin123', 10);
-    const admin = await prisma.user.create({
-      data: {
-        name: 'Nexus Administrator',
-        email: 'admin@nexus2026.com',
-        password: hashedPassword,
-        role: 'admin',
-      },
+    const adminRef = await db.collection('users').add({
+      name: 'Nexus Administrator',
+      email: 'admin@nexus2026.com',
+      password: hashedPassword,
+      role: 'admin',
+      createdAt: new Date(),
     });
-    console.log('Created admin user:', admin.email);
+    console.log('Created admin user:', 'admin@nexus2026.com', '(id:', adminRef.id, ')');
 
     // 3. Seed Features/Tracks
     const features = [
@@ -76,7 +97,7 @@ async function main() {
     ];
 
     for (const feat of features) {
-      await prisma.feature.create({ data: feat });
+      await db.collection('features').add({ ...feat, createdAt: new Date() });
     }
     console.log(`Seeded ${features.length} technical tracks.`);
 
@@ -89,7 +110,7 @@ async function main() {
     ];
 
     for (const stat of stats) {
-      await prisma.statistic.create({ data: stat });
+      await db.collection('statistics').add({ ...stat, createdAt: new Date() });
     }
     console.log(`Seeded ${stats.length} metrics.`);
 
@@ -125,7 +146,7 @@ async function main() {
     ];
 
     for (const mem of team) {
-      await prisma.teamMember.create({ data: mem });
+      await db.collection('team_members').add({ ...mem, createdAt: new Date() });
     }
     console.log(`Seeded ${team.length} committee members.`);
 
@@ -164,16 +185,14 @@ async function main() {
     ];
 
     for (const img of gallery) {
-      await prisma.galleryImage.create({ data: img });
+      await db.collection('gallery_images').add({ ...img, createdAt: new Date() });
     }
     console.log(`Seeded ${gallery.length} gallery images.`);
 
-    console.log('Database seeded successfully!');
+    console.log('\n✅ Firestore database seeded successfully!');
   } catch (error) {
     console.error('Error seeding database:', error);
-  } finally {
-    await prisma.$disconnect();
-    await pool.end();
+    process.exit(1);
   }
 }
 

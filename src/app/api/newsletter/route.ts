@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/firebase';
 import { verifyAuth } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
@@ -9,8 +9,14 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const subscribers = await prisma.newsletterSubscriber.findMany({
-      orderBy: { createdAt: 'desc' },
+    const snapshot = await db.collection('newsletter_subscribers').orderBy('createdAt', 'desc').get();
+    const subscribers = snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        createdAt: data.createdAt?.toDate?.() || data.createdAt,
+      };
     });
     return NextResponse.json(subscribers);
   } catch (error) {
@@ -32,19 +38,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
     }
 
-    const existing = await prisma.newsletterSubscriber.findUnique({
-      where: { email },
-    });
-
-    if (existing) {
+    const existing = await db.collection('newsletter_subscribers').where('email', '==', email).limit(1).get();
+    if (!existing.empty) {
       return NextResponse.json({ error: 'Email already subscribed' }, { status: 400 });
     }
 
-    const subscriber = await prisma.newsletterSubscriber.create({
-      data: { email },
-    });
+    const data = { email, createdAt: new Date() };
+    const ref = await db.collection('newsletter_subscribers').add(data);
 
-    return NextResponse.json({ success: true, subscriber }, { status: 201 });
+    return NextResponse.json({ success: true, subscriber: { id: ref.id, email, createdAt: data.createdAt } }, { status: 201 });
   } catch (error) {
     console.error('Create newsletter subscriber error:', error);
     return NextResponse.json({ error: 'Failed to subscribe' }, { status: 500 });
@@ -65,9 +67,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Subscriber ID is required' }, { status: 400 });
     }
 
-    await prisma.newsletterSubscriber.delete({
-      where: { id },
-    });
+    await db.collection('newsletter_subscribers').doc(id).delete();
 
     return NextResponse.json({ success: true });
   } catch (error) {

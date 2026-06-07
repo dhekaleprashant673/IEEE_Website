@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/firebase';
 import { verifyAuth } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
@@ -9,8 +9,14 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const contacts = await prisma.contact.findMany({
-      orderBy: { createdAt: 'desc' },
+    const snapshot = await db.collection('contacts').orderBy('createdAt', 'desc').get();
+    const contacts = snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        createdAt: data.createdAt?.toDate?.() || data.createdAt,
+      };
     });
     return NextResponse.json(contacts);
   } catch (error) {
@@ -32,11 +38,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
     }
 
-    const contact = await prisma.contact.create({
-      data: { name, email, subject, message },
-    });
+    const data = { name, email, subject, message, createdAt: new Date() };
+    const ref = await db.collection('contacts').add(data);
 
-    return NextResponse.json({ success: true, contact }, { status: 201 });
+    return NextResponse.json({ success: true, contact: { id: ref.id, ...data } }, { status: 201 });
   } catch (error) {
     console.error('Create contact submission error:', error);
     return NextResponse.json({ error: 'Failed to submit message' }, { status: 500 });

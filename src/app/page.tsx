@@ -9,10 +9,9 @@ import Committees from '@/components/Committees';
 import ConferenceTopics from '@/components/ConferenceTopics';
 import Publication from '@/components/Publication';
 import CallForPapers from '@/components/CallForPapers';
-import Download from '@/components/Download';
-import Gallery from '@/components/Gallery';
+
 import Contact from '@/components/Contact';
-import Footer from '@/components/Footer';
+import VenueFooter from '@/components/VenueFooter';
 
 export default function Home() {
   return (
@@ -27,11 +26,9 @@ export default function Home() {
         <ConferenceTopics />
         <Publication />
         <CallForPapers />
-        <Download />
-        <Gallery />
         <Contact />
       </main>
-      <Footer />
+      <VenueFooter />
     </div>
   );
 }

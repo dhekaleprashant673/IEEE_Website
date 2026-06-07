@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/firebase';
 import { verifyAuth } from '@/lib/auth';
+
+const serializeDoc = (doc: FirebaseFirestore.DocumentSnapshot) => {
+  const data = doc.data()!;
+  return {
+    id: doc.id,
+    ...data,
+    createdAt: data.createdAt?.toDate?.() || data.createdAt,
+  };
+};
 
 export async function GET() {
   try {
-    const stats = await prisma.statistic.findMany({
-      orderBy: { createdAt: 'asc' },
-    });
+    const snapshot = await db.collection('statistics').orderBy('createdAt', 'asc').get();
+    const stats = snapshot.docs.map(serializeDoc);
     return NextResponse.json(stats);
   } catch (error) {
     console.error('Fetch stats error:', error);
@@ -26,11 +34,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const stat = await prisma.statistic.create({
-      data: { title, value },
-    });
+    const data = { title, value, createdAt: new Date() };
+    const ref = await db.collection('statistics').add(data);
 
-    return NextResponse.json(stat, { status: 201 });
+    return NextResponse.json({ id: ref.id, ...data }, { status: 201 });
   } catch (error) {
     console.error('Create stat error:', error);
     return NextResponse.json({ error: 'Failed to create statistic' }, { status: 500 });

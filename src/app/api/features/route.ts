@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/firebase';
 import { verifyAuth } from '@/lib/auth';
+
+const serializeDoc = (doc: FirebaseFirestore.DocumentSnapshot) => {
+  const data = doc.data()!;
+  return {
+    id: doc.id,
+    ...data,
+    createdAt: data.createdAt?.toDate?.() || data.createdAt,
+  };
+};
 
 export async function GET() {
   try {
-    const features = await prisma.feature.findMany({
-      orderBy: { createdAt: 'asc' },
-    });
+    const snapshot = await db.collection('features').orderBy('createdAt', 'asc').get();
+    const features = snapshot.docs.map(serializeDoc);
     return NextResponse.json(features);
   } catch (error) {
     console.error('Fetch features error:', error);
@@ -26,11 +34,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const feature = await prisma.feature.create({
-      data: { title, description, icon },
-    });
+    const data = { title, description, icon, createdAt: new Date() };
+    const ref = await db.collection('features').add(data);
 
-    return NextResponse.json(feature, { status: 201 });
+    return NextResponse.json({ id: ref.id, ...data }, { status: 201 });
   } catch (error) {
     console.error('Create feature error:', error);
     return NextResponse.json({ error: 'Failed to create feature' }, { status: 500 });

@@ -1,12 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/firebase';
 import { verifyAuth } from '@/lib/auth';
+
+const serializeDoc = (doc: FirebaseFirestore.QueryDocumentSnapshot) => {
+  const data = doc.data();
+  return {
+    id: doc.id,
+    ...data,
+    createdAt: data.createdAt?.toDate?.() || data.createdAt,
+  };
+};
 
 export async function GET() {
   try {
-    const team = await prisma.teamMember.findMany({
-      orderBy: { createdAt: 'asc' },
-    });
+    const snapshot = await db
+      .collection('team_members')
+      .orderBy('createdAt', 'asc')
+      .get();
+
+    const team = snapshot.docs.map(serializeDoc);
     return NextResponse.json(team);
   } catch (error) {
     console.error('Fetch team error:', error);
@@ -26,11 +38,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const member = await prisma.teamMember.create({
-      data: { name, designation, image, linkedin, github },
-    });
+    const docData = { name, designation, image, linkedin, github, createdAt: new Date() };
+    const ref = await db.collection('team_members').add(docData);
 
-    return NextResponse.json(member, { status: 201 });
+    return NextResponse.json({ id: ref.id, ...docData }, { status: 201 });
   } catch (error) {
     console.error('Create team member error:', error);
     return NextResponse.json({ error: 'Failed to create team member' }, { status: 500 });

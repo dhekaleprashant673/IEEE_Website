@@ -108,19 +108,19 @@ export default function CallForPapers() {
           </motion.div>
 
           {/* Registration Details Card */}
-          <motion.div 
+          <motion.div
             className="bg-white border border-gray-150 rounded-2xl p-8 shadow-sm"
             variants={itemVariants}
           >
             <h3 className="text-xl font-extrabold text-[#0f2b5c] mb-4 flex items-center">
               <CreditCard className="w-5 h-5 text-[#0250c5] mr-2.5" />
-              Registration Fee
+              Registration Fees
             </h3>
             <p className="text-gray-600 text-sm mb-6 font-light">
               ONE Registration Fee includes the following for the registered authors:
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-sm">
               {[
                 'Participation in the technical program',
                 'Digital Attendance Certificate',
@@ -138,52 +138,49 @@ export default function CallForPapers() {
               <table className="w-full text-left text-sm border-collapse">
                 <thead>
                   <tr className="bg-[#0f2b5c] text-white font-mono uppercase text-xs tracking-wider">
-                    <th className="py-4 px-5 border-r border-[#0f2b5c]/10 text-center w-12">#</th>
-                    <th className="py-4 px-5 border-r border-[#0f2b5c]/10">Registration Category</th>
-                    <th className="py-4 px-5 border-r border-[#0f2b5c]/10">Early Bird Rate</th>
-                    <th className="py-4 px-5 border-r border-[#0f2b5c]/10">Normal Rate</th>
-                    <th className="py-4 px-5">At Desk</th>
+                    <th className="py-4 px-5 border-r border-white/10">Category</th>
+                    <th className="py-4 px-5 border-r border-white/10 whitespace-nowrap text-center">in INR</th>
+                    <th className="py-4 px-5 text-center whitespace-nowrap">in USD</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-150 text-gray-700 font-light">
+                <tbody className="divide-y divide-gray-100 text-gray-700">
                   {[
-                    {
-                      cat: 'International Delegates (Scholars / Faculty)',
-                      early: 'USD $ 150',
-                      normal: 'USD $ 175',
-                      desk: 'USD $ 200',
-                    },
-                    {
-                      cat: 'International Students * (UG / PG)',
-                      early: 'USD $ 125',
-                      normal: 'USD $ 150',
-                      desk: 'USD $ 175',
-                    },
-                    {
-                      cat: 'International Participant (Without paper) / Listeners',
-                      early: 'USD $ 100',
-                      normal: 'USD $ 125',
-                      desk: 'USD $ 150',
-                    },
-                    {
-                      cat: 'Indian Regular Presenter (Scholars / Faculty)',
-                      early: 'INR 7,000',
-                      normal: 'INR 8,000',
-                      desk: 'INR 9,000',
-                    },
+                    { cat: 'Industry Professionals', inr: '₹ 12,000', usd: '$ 150', ieee: false },
+                    { cat: 'Faculty / Academicians', inr: '₹ 10,000', usd: '$ 120', ieee: false },
+                    { cat: 'Faculty / Academicians (IEEE Members)', inr: '₹ 8,000', usd: '$ 100', ieee: true },
+                    { cat: 'Research Scholars and UG/PG Students', inr: '₹ 7,000', usd: '$ 80', ieee: false },
+                    { cat: 'Research Scholars and UG/PG Students (IEEE Members)', inr: '₹ 6,000', usd: '$ 70', ieee: true },
+                    { cat: 'Co-Authors / Participants', inr: '₹ 3,000', usd: '$ 40', ieee: false },
                   ].map((row, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
-                      <td className="py-4 px-5 border-r border-gray-150 text-center font-bold text-gray-400">{idx + 1}</td>
-                      <td className="py-4 px-5 border-r border-gray-150 font-bold text-[#0f2b5c]">{row.cat}</td>
-                      <td className="py-4 px-5 border-r border-gray-150 text-emerald-600 font-bold">{row.early}</td>
-                      <td className="py-4 px-5 border-r border-gray-150 text-gray-800 font-bold">{row.normal}</td>
-                      <td className="py-4 px-5 text-gray-600 font-bold">{row.desk}</td>
+                    <tr
+                      key={idx}
+                      className={`transition-colors ${
+                        row.ieee
+                          ? 'bg-[#0250c5]/5 hover:bg-[#0250c5]/10'
+                          : idx % 2 === 0
+                          ? 'bg-white hover:bg-gray-50'
+                          : 'bg-gray-50/60 hover:bg-gray-100/60'
+                      }`}
+                    >
+                      <td className="py-4 px-5 border-r border-gray-100 font-bold text-[#0f2b5c]">
+                        <span className="flex items-center gap-2">
+                          {row.ieee && <CheckCircle className="w-4 h-4 text-[#0250c5] flex-shrink-0" />}
+                          {row.cat}
+                        </span>
+                      </td>
+                      <td className="py-4 px-5 border-r border-gray-100 font-bold text-gray-800 text-center whitespace-nowrap">
+                        {row.inr}
+                      </td>
+                      <td className="py-4 px-5 font-bold text-[#0250c5] text-center whitespace-nowrap">
+                        {row.usd}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           </motion.div>
+
 
           {/* Points to Note & Bank Transfer Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

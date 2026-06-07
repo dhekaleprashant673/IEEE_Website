@@ -1,12 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/firebase';
 import { verifyAuth } from '@/lib/auth';
+
+const serializeDoc = (doc: FirebaseFirestore.QueryDocumentSnapshot) => {
+  const data = doc.data();
+  return {
+    id: doc.id,
+    ...data,
+    createdAt: data.createdAt?.toDate?.() || data.createdAt,
+  };
+};
 
 export async function GET() {
   try {
-    const images = await prisma.galleryImage.findMany({
-      orderBy: { createdAt: 'desc' },
-    });
+    const snapshot = await db
+      .collection('gallery_images')
+      .orderBy('createdAt', 'desc')
+      .get();
+
+    const images = snapshot.docs.map(serializeDoc);
     return NextResponse.json(images);
   } catch (error) {
     console.error('Fetch gallery images error:', error);
@@ -26,11 +38,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const image = await prisma.galleryImage.create({
-      data: { imageUrl, title, category },
-    });
+    const docData = { imageUrl, title, category, createdAt: new Date() };
+    const ref = await db.collection('gallery_images').add(docData);
 
-    return NextResponse.json(image, { status: 201 });
+    return NextResponse.json({ id: ref.id, ...docData }, { status: 201 });
   } catch (error) {
     console.error('Create gallery image error:', error);
     return NextResponse.json({ error: 'Failed to create gallery image' }, { status: 500 });
