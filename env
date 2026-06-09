@@ -1,9 +1,0 @@
-# Firebase configuration
-FIREBASE_PROJECT_ID="ieee-d709d"
-FIREBASE_SERVICE_ACCOUNT_PATH="./ieee-d709d-firebase-adminsdk-fbsvc-e7c1885361.json"
-
-# JWT Auth Secret
-JWT_SECRET="nexus_secret_key_2026_super_secure_hash"
-
-# App environment
-NODE_ENV="development"

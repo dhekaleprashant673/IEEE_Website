@@ -107,10 +107,9 @@ export default function Contact() {
           <h3 className="text-center text-lg md:text-xl font-extrabold text-[#0f2b5c] mb-8 uppercase tracking-wide">
             Conference Conveners
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               { name: 'Dr. A. O. Mulani', desc: 'H.O.D, ENTC' },
-              { name: 'Dr. R. S. Mente', desc: 'Dept. of Computer Science, Punyashlok Ahilyadevi Holkar Solapur University, Solapur' },
               { name: 'Prof. N. M. Sawant', desc: 'IQAC Co-ordinator, SKNSCOE, Pandharpur' }
             ].map((convener, idx) => (
               <motion.div 
@@ -133,10 +132,8 @@ export default function Contact() {
           <h3 className="text-center text-lg md:text-xl font-extrabold text-[#0f2b5c] mb-8 uppercase tracking-wide">
             Co-Conveners
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
-              { name: 'Dr. A. R. Shinde', desc: 'Dept. of Computer Science, Co-Convener, ICICVT-2025, Punyashlok Ahilyadevi Holkar Solapur University, Solapur' },
-              { name: 'Dr. S. D. Raut', desc: 'Dept. of Computer Science, Co-Convener, ICICVT-2025, Punyashlok Ahilyadevi Holkar Solapur University, Solapur' },
               { name: 'Prof. S. G. Linge', desc: 'Assistant Professor, ENTC' },
               { name: 'Prof. S. R. Takale', desc: 'Assistant Professor, ENTC' }
             ].map((coConvener, idx) => (
